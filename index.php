@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Google PDF Viewer for Elementor
+ * Plugin Name: PDF viewer for Elementor
  * Description: This plugin helps you embed PDF documents to Elementor quickly and easily. 
  * Plugin URI:  https://github.com/kazbekkadalashvili/elementor-pdf-viewer
  * Version:     1.0
