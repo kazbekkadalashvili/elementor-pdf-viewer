@@ -102,15 +102,19 @@ class Elementor_PDF_Viewer extends Widget_Base {
 				],
 			]
 		);
-
-			
+		
 		$this->add_control(
 			'pdf_url',
 			[
 				'label' => __( 'PDF URL', 'elementor' ),
-				'type' => Controls_Manager::TEXT,
+				'type' => \Elementor\Controls_Manager::URL,
+				'placeholder' => __( 'http://www.pdf995.com/samples/pdf.pdf', 'elementor' ),
 				'show_external' => true,
-				'default' => 'http://www.pdf995.com/samples/pdf.pdf',
+				'default' => [
+					'url' => 'http://www.pdf995.com/samples/pdf.pdf',
+					'is_external' => true,
+					'nofollow' => true,
+				],
 				'dynamic' => [
 					'active' => true,
 				],
@@ -125,6 +129,7 @@ class Elementor_PDF_Viewer extends Widget_Base {
 			[
 				'label' => __( 'Choose PDF', 'elementor' ),
 				'type' => \Elementor\Controls_Manager::MEDIA,
+				'media_type' => 'application/pdf',
 				'default' => [
 					'url' => \Elementor\Utils::get_placeholder_image_src(),
 				],
@@ -230,7 +235,7 @@ class Elementor_PDF_Viewer extends Widget_Base {
 		$settings = $this->get_settings_for_display();
 
 		$align = 'display: block; margin-left: auto; margin-right: auto;';
-
+		
 		if ($settings['text_align'] === 'left') {
 			$align = 'display: block; float: left;';
 		}
@@ -245,14 +250,14 @@ class Elementor_PDF_Viewer extends Widget_Base {
 		}
 
 		if ($settings['pdf_type'] == 'url' AND isset($settings['pdf_url'])) {
-			$pdf_url = $settings['pdf_url'];
+			$pdf_url = $settings['pdf_url']['url'];
 		}
 
 		if ($settings['pdf_type'] == 'file' AND isset($settings['pdf_file']['url'])) {
 			$pdf_url = $settings['pdf_file']['url'];
 		}
 
-		echo '<iframe src="https://docs.google.com/gview?url=' . $pdf_url . '&embedded=true" style="' . $align . $width . $height . '" frameborder="1" marginheight="0px" marginwidth="0px" allowfullscreen></iframe>';
+		echo '<iframe src="https://docs.google.com/viewer?url=' . $pdf_url . '&amp;embedded=true" style="' . $align . $width . $height . '" frameborder="1" marginheight="0px" marginwidth="0px" allowfullscreen></iframe>';
 
 	}
 

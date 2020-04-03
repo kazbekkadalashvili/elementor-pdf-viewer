@@ -3,7 +3,7 @@
  * Plugin Name: PDF viewer for Elementor
  * Description: This plugin helps you embed PDF documents to Elementor quickly and easily. 
  * Plugin URI:  https://github.com/kazbekkadalashvili/elementor-pdf-viewer
- * Version:     1.0
+ * Version:     2.9
  * Author:      Kazbek Kadalashvili
  * Author URI:  https://www.upwork.com/o/profiles/users/_~01800759f61b8ffa73/
  * Text Domain: elementor
@@ -20,7 +20,7 @@ class ElementorPDFViewer {
 	 * @since 1.2.0
 	 * @var string The plugin version.
 	 */
-	const VERSION = '1.2.0';
+	const VERSION = '2.9.0';
 
 	/**
 	 * Minimum Elementor Version
@@ -175,3 +175,50 @@ class ElementorPDFViewer {
 }
 
 new ElementorPDFViewer;
+
+
+// add plugin activation time
+function void_activation_time(){
+    $get_activation_time = strtotime("now");
+    add_option('pdf_elementor_activation_time', $get_activation_time );
+}
+register_activation_hook( __FILE__, 'void_activation_time' );
+
+//check if review notice should be shown or not
+function void_check_installation_time() {   
+    
+	$install_date = get_option( 'pdf_elementor_activation_time' );
+	$past_date = strtotime( '-3 days' );
+ 
+	if ( $past_date >= $install_date ) {
+ 
+		add_action( 'admin_notices', 'void_display_admin_notice' );
+ 
+	}
+
+}
+add_action( 'admin_init', 'void_check_installation_time' );
+
+/**
+* Display Admin Notice, asking for a review
+**/
+function void_display_admin_notice() {
+	$dont_disturb = esc_url( get_admin_url() . '?spare_me=1' );
+	$plugin_info = get_plugin_data( __FILE__ , true, true );       
+	$reviewurl = esc_url( 'https://wordpress.org/support/plugin/'. sanitize_title( $plugin_info['Name'] ) . '/reviews/' );
+	if( !get_option('void_spare_me') ){
+		printf(__('<div class="notice notice-success" style="padding: 10px;">You have been using <b> %s </b> for a while. We hope you liked it! Please give us a quick rating, it works as a boost for us to keep working on the plugin!<br><div class="void-review-btn"><a href="%s" style="margin-top: 10px; display: inline-block; margin-right: 5px;" class="button button-primary" target=
+		"_blank">Rate Now!</a><a href="%s" style="margin-top: 10px; display: inline-block; margin-right: 5px;" class="button button-secondary">Already Done !</a></div></div>', $plugin_info['TextDomain']), $plugin_info['Name'], $reviewurl, $dont_disturb );
+	}
+}
+
+// remove the notice for the user if review already done or if the user does not want to
+function void_spare_me(){    
+    if( isset( $_GET['spare_me'] ) && !empty( $_GET['spare_me'] ) ){
+        $spare_me = $_GET['spare_me'];
+        if( $spare_me == 1 ){
+            add_option( 'void_spare_me' , TRUE );
+        }
+    }
+}
+add_action( 'admin_init', 'void_spare_me', 5 );

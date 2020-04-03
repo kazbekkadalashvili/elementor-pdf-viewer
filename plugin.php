@@ -47,6 +47,7 @@ class Plugin {
 	 */
 	private function include_widgets_files() {
 		require_once( __DIR__ . '/widgets/pdf-viewer.php' );
+		require_once( __DIR__ . '/widgets/pdfjs-viewer.php' );
 	}
 
 	/**
@@ -63,6 +64,8 @@ class Plugin {
 
 		// Register Widgets
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\Elementor_PDF_Viewer() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\Elementor_PDFjs_Viewer() );
+
 	}
 
 	/**
